@@ -410,6 +410,8 @@ const KB = {
       ],
       phrases: [
         'feeling stressed','academic stress','manage stress','how to cope',
+        'deal with stress','handle stress','reduce stress','relieve stress',
+        'stress during exam','exam stress','exam anxiety',
         'cara atasi tekanan','tekanan akademik','cara hadapi tekanan',
         'mental health support','bantuan kesihatan mental',
         'feel overwhelmed','terlalu tertekan','rasa overwhelmed',
@@ -452,8 +454,10 @@ const KB = {
       ],
       phrases: [
         'library services','library hours','library location','perpustakaan universiti',
+        'campus library','university library','the library','find the library',
+        'where is the library','where is library','library resources','library database',
         'borrow a book','pinjam buku','online library','perpustakaan dalam talian',
-        'how to use the library','cara guna perpustakaan',
+        'how to use the library','cara guna perpustakaan','pergi perpustakaan',
       ],
       en: `📚 **University Library Services**\n\nYour library is one of the most powerful academic resources available to you.\n\n**Physical Services:**\n- Study rooms and quiet reading halls\n- Print, scan, and photocopy facilities\n- Reference and information desks\n- Group discussion rooms (usually bookable)\n\n**Digital Services:**\n- Online databases: JSTOR, Scopus, IEEE Xplore, EBSCOhost\n- E-books and e-journals (access with your student login)\n- Interlibrary loan requests for items not in your collection\n\n**How to Get the Most from Your Library:**\n- Use your student ID or library card to borrow books\n- Book a study room in advance during exam season\n- Ask a librarian for help — they're experts at finding academic sources\n- Use citation tools like Mendeley, Zotero (free) or EndNote\n\n> 📍 For exact location, opening hours, and procedures, check your library's official website or student portal.`,
       ms: `📚 **Perkhidmatan Perpustakaan Universiti**\n\nPerpustakaan anda adalah salah satu sumber akademik paling berkuasa yang tersedia untuk anda.\n\n**Perkhidmatan Fizikal:**\n- Bilik belajar dan dewan bacaan yang tenang\n- Kemudahan cetak, imbas, dan fotokopi\n- Meja rujukan dan maklumat\n- Bilik perbincangan berkumpulan (biasanya boleh ditempah)\n\n**Perkhidmatan Digital:**\n- Pangkalan data dalam talian: JSTOR, Scopus, IEEE Xplore, EBSCOhost\n- E-buku dan e-jurnal (akses dengan log masuk pelajar anda)\n- Permintaan pinjaman antara perpustakaan untuk item yang tidak ada dalam koleksi\n\n**Cara Memanfaatkan Perpustakaan Anda:**\n- Gunakan kad pelajar atau kad perpustakaan untuk meminjam buku\n- Tempah bilik belajar terlebih dahulu semasa musim peperiksaan\n- Minta bantuan pustakawan — mereka pakar mencari sumber akademik\n- Gunakan alat petikan seperti Mendeley, Zotero (percuma) atau EndNote\n\n> 📍 Untuk lokasi tepat, waktu operasi, dan prosedur, semak laman web rasmi perpustakaan atau portal pelajar anda.`,
@@ -845,6 +849,229 @@ function getResponse(rawText) {
 }
 
 // ══════════════════════════════════════════════════════════════
+//  v3: VIEW NAVIGATION SYSTEM
+// ══════════════════════════════════════════════════════════════
+
+let currentView = 'chat';
+let plannerReady = false;
+let timerReady   = false;
+
+/**
+ * Switch the main content to the requested view.
+ * Lazily initialises Planner and Timer on first visit.
+ */
+function showView(viewName) {
+  currentView = viewName;
+
+  // Hide all panels
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
+
+  // Show target panel
+  const panel = document.getElementById('view-' + viewName);
+  if (panel) panel.classList.remove('hidden');
+
+  // Update sidebar nav active state
+  document.querySelectorAll('.nav-view-btn').forEach(btn => {
+    const active = btn.dataset.view === viewName;
+    btn.classList.toggle('active', active);
+    if (active) btn.setAttribute('aria-current', 'true');
+    else btn.removeAttribute('aria-current');
+  });
+
+  // Show/hide chat-specific sidebar section
+  const chatSection = document.getElementById('sidebarChatSection');
+  if (chatSection) chatSection.style.display = viewName === 'chat' ? '' : 'none';
+
+  // Lazy-init modules
+  if (viewName === 'planner') {
+    const plannerContainer = document.getElementById('planner-view');
+    try {
+      if (!window.Planner) throw new Error('planner.js did not load');
+      if (!plannerReady) {
+        window.Planner.init();
+        plannerReady = true;
+      }
+      // Re-render on navigation if the planner content is missing.
+      if (plannerContainer && !plannerContainer.querySelector('.pl-view')) {
+        window.Planner.renderPlanner();
+      }
+      if (plannerContainer && !plannerContainer.querySelector('.pl-view')) {
+        throw new Error('Planner rendered no visible content');
+      }
+    } catch (err) {
+      console.error('[CampusBuddy] Study Planner failed:', err);
+      if (plannerContainer) {
+        const notice = document.createElement('div');
+        notice.className = 'pl-view';
+        const heading = document.createElement('h2');
+        heading.textContent = 'Study Planner could not load';
+        const detail = document.createElement('p');
+        detail.textContent = 'Error: ' + (err && err.message ? err.message : String(err));
+        const retry = document.createElement('button');
+        retry.className = 'pl-btn pl-btn-primary';
+        retry.textContent = 'Try again';
+        retry.addEventListener('click', () => { plannerReady = false; showView('planner'); });
+        notice.append(heading, detail, retry);
+        plannerContainer.replaceChildren(notice);
+      }
+    }
+  }
+  if (viewName === 'timer' && !timerReady) {
+    if (window.Timer) { window.Timer.init(); timerReady = true; }
+  }
+  if (viewName === 'dashboard') {
+    refreshDashboard();
+  }
+
+  if (window.innerWidth <= 900) closeSidebar();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  v3: DASHBOARD
+// ══════════════════════════════════════════════════════════════
+
+function refreshDashboard() {
+  // Date line
+  const dateEl = document.getElementById('dashDate');
+  if (dateEl) {
+    dateEl.textContent = new Date().toLocaleDateString(
+      currentLang === 'ms' ? 'ms-MY' : 'en-US',
+      { weekday:'long', year:'numeric', month:'long', day:'numeric' }
+    );
+  }
+
+  // Motivation
+  const motEl = document.getElementById('dash-motivation');
+  if (motEl) {
+    const mot = KB.motivations[Math.floor(Math.random() * KB.motivations.length)];
+    motEl.textContent = '"' + mot + '"';
+  }
+
+  // Focus stats from timer localStorage
+  try {
+    const tRaw = localStorage.getItem('cb_timer_v3');
+    if (tRaw) {
+      const td = JSON.parse(tRaw);
+      const sEl = document.getElementById('dash-sessions-today');
+      const mEl = document.getElementById('dash-total-mins');
+      const stEl = document.getElementById('dash-streak');
+      if (sEl) sEl.textContent = td.sessionsToday || 0;
+      if (mEl) mEl.textContent = Math.round(td.totalFocusMinutes || 0);
+      if (stEl) stEl.textContent = td.streak || 0;
+
+      // Weekly chart
+      const wEl = document.getElementById('dash-weekly');
+      if (wEl && td.history) {
+        buildWeeklyChart(wEl, td.history);
+      }
+    }
+  } catch(e) { /* ignore */ }
+
+  // Planner data
+  try {
+    const pRaw = localStorage.getItem('cb_planner_v3');
+    if (pRaw) {
+      const pd = JSON.parse(pRaw);
+      refreshDashboardPlanner(pd);
+    }
+  } catch(e) { /* ignore */ }
+}
+
+function buildWeeklyChart(container, history) {
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  // Build last 7 days
+  const result = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().slice(0, 10);
+    const entry = (history || []).find(h => h.date === dateStr);
+    result.push({ label: days[d.getDay()], sessions: entry ? entry.sessions : 0 });
+  }
+  const max = Math.max(...result.map(r => r.sessions), 1);
+  container.innerHTML = result.map(r => `
+    <div class="dash-week-bar-wrap">
+      <div class="dash-week-bar" style="height:${Math.round((r.sessions / max) * 60) + 8}px" title="${r.sessions} sessions"></div>
+      <div class="dash-week-label">${r.label}</div>
+    </div>
+  `).join('');
+}
+
+function refreshDashboardPlanner(pd) {
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Today's sessions
+  const todayEl = document.getElementById('dash-today-sessions');
+  const todaySessions = (pd.sessions || []).filter(s => s.date === today);
+  if (todayEl) {
+    if (todaySessions.length === 0) {
+      todayEl.innerHTML = '<div class="dash-empty">No sessions today</div>';
+    } else {
+      todayEl.innerHTML = todaySessions.map(s => {
+        const sub = (pd.subjects || []).find(sub => sub.id === s.subjectId);
+        const color = sub ? sub.color : '#60a5fa';
+        const done  = s.completed ? 'text-decoration:line-through;opacity:0.5' : '';
+        return `<div class="dash-session-item">
+          <div class="dash-session-dot" style="background:${escapeAttr(color)}"></div>
+          <div class="dash-session-info">
+            <div class="dash-session-name" style="${done}">${escapeHtml(sub ? sub.name : 'Study Session')}</div>
+            <div class="dash-session-time">${escapeHtml(s.startTime)} – ${escapeHtml(s.endTime)}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // Upcoming exams
+  const examsEl = document.getElementById('dash-upcoming-exams');
+  const upcoming = (pd.subjects || [])
+    .filter(s => s.examDate >= today)
+    .sort((a, b) => a.examDate.localeCompare(b.examDate))
+    .slice(0, 5);
+  if (examsEl) {
+    if (upcoming.length === 0) {
+      examsEl.innerHTML = '<div class="dash-empty">No upcoming exams</div>';
+    } else {
+      examsEl.innerHTML = upcoming.map(s => {
+        const days = Math.ceil((new Date(s.examDate) - new Date(today)) / 86400000);
+        const urgentClass = days <= 3 ? 'urgent' : '';
+        return `<div class="dash-exam-item">
+          <div class="dash-exam-name">${escapeHtml(s.name)}</div>
+          <div class="dash-exam-days ${urgentClass}">${days}d</div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // Study progress
+  const progEl = document.getElementById('dash-study-progress');
+  if (progEl && pd.subjects && pd.subjects.length > 0) {
+    progEl.innerHTML = pd.subjects.map(s => {
+      const total     = (pd.sessions || []).filter(x => x.subjectId === s.id).length;
+      const completed = (pd.sessions || []).filter(x => x.subjectId === s.id && x.completed).length;
+      const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
+      return `<div class="dash-subject-progress">
+        <div class="dash-prog-label">
+          <span class="dash-prog-name">${escapeHtml(s.name)}</span>
+          <span class="dash-prog-pct">${pct}%</span>
+        </div>
+        <div class="dash-prog-bar"><div class="dash-prog-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ── XSS helpers ───────────────────────────────────────────────
+function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeAttr(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/"/g, '&quot;');
+}
+
+// ══════════════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════════════
 
@@ -855,16 +1082,25 @@ function init() {
   loadHistory();
   setupEventListeners();
   showMotivationBanner();
+
+  // Init AI module
+  if (window.AIMode) window.AIMode.init();
+
+  // Apply i18n translations to static elements
+  if (window.I18n) {
+    window.I18n.setLang(currentLang);
+    window.I18n.applyAll();
+  }
 }
 
 // ── Greeting ───────────────────────────────────────────────────
 function setGreeting() {
   const h = new Date().getHours();
-  const greetings = {
-    en: h < 12 ? 'Good morning! 👋' : h < 17 ? 'Good afternoon! 👋' : 'Good evening! 👋',
-    ms: h < 12 ? 'Selamat pagi! 👋'  : h < 17 ? 'Selamat petang! 👋'  : 'Selamat malam! 👋',
-  };
-  dynamicGreeting.textContent = greetings[currentLang];
+  const key = h < 12 ? 'topbar.greeting.morning' : h < 17 ? 'topbar.greeting.afternoon' : 'topbar.greeting.evening';
+  const fallback = h < 12 ? 'Good morning! 👋' : h < 17 ? 'Good afternoon! 👋' : 'Good evening! 👋';
+  if (dynamicGreeting) {
+    dynamicGreeting.textContent = (window.I18n ? window.I18n.t(key) : null) || fallback;
+  }
 }
 
 // ── Theme ──────────────────────────────────────────────────────
@@ -881,14 +1117,23 @@ function applyLang(lang) {
   document.querySelectorAll('.lang-btn').forEach(btn => {
     const active = btn.dataset.lang === lang;
     btn.classList.toggle('active', active);
-    btn.setAttribute('aria-pressed', active);
+    btn.setAttribute('aria-pressed', String(active));
   });
-  chatInput.placeholder = lang === 'ms'
-    ? 'Tanya saya apa-apa tentang kehidupan kampus…'
-    : 'Ask me anything about campus life…';
-  document.querySelector('.input-hint').innerHTML = lang === 'ms'
-    ? 'Tekan <kbd>Enter</kbd> untuk hantar · <kbd>Shift+Enter</kbd> untuk baris baru · Sokongan dwibahasa: EN / BM'
-    : 'Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line · Bilingual support: EN / BM';
+  if (chatInput) {
+    chatInput.placeholder = window.I18n
+      ? window.I18n.t('chat.placeholder')
+      : (lang === 'ms' ? 'Tanya saya apa-apa tentang kehidupan kampus…' : 'Ask me anything about campus life…');
+  }
+  const hintEl = document.getElementById('inputHint');
+  if (hintEl) {
+    hintEl.innerHTML = lang === 'ms'
+      ? 'Tekan <kbd>Enter</kbd> untuk hantar · <kbd>Shift+Enter</kbd> baris baru · Dwibahasa: EN / BM'
+      : 'Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line · Bilingual: EN / BM';
+  }
+  if (window.I18n) {
+    window.I18n.setLang(lang);
+    window.I18n.applyAll();
+  }
   setGreeting();
 }
 
@@ -901,7 +1146,7 @@ function showMotivationBanner() {
   banner.className = 'motivation-banner';
   banner.innerHTML = `✨ <strong>Daily Motivation:</strong> ${mot}`;
   const featureCards = document.querySelector('.feature-cards');
-  featureCards.parentNode.insertBefore(banner, featureCards);
+  if (featureCards) featureCards.parentNode.insertBefore(banner, featureCards);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -910,70 +1155,82 @@ function showMotivationBanner() {
 
 function setupEventListeners() {
 
-  sendBtn.addEventListener('click', handleSend);
-  chatInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  });
-  chatInput.addEventListener('input', () => {
-    chatInput.style.height = 'auto';
-    chatInput.style.height = Math.min(chatInput.scrollHeight, 140) + 'px';
-    sendBtn.disabled = chatInput.value.trim().length === 0;
-  });
+  // Chat send
+  if (sendBtn) sendBtn.addEventListener('click', handleSend);
+  if (chatInput) {
+    chatInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+    chatInput.addEventListener('input', () => {
+      chatInput.style.height = 'auto';
+      chatInput.style.height = Math.min(chatInput.scrollHeight, 140) + 'px';
+      if (sendBtn) sendBtn.disabled = chatInput.value.trim().length === 0;
+    });
+  }
 
-  themeToggle.addEventListener('click', () => {
+  // Theme toggle
+  if (themeToggle) themeToggle.addEventListener('click', () => {
     applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
   });
 
+  // Lang toggle
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => applyLang(btn.dataset.lang));
   });
 
-  sidebarOpen.addEventListener('click', openSidebar);
-  sidebarClose.addEventListener('click', closeSidebar);
-  sidebarOverlay.addEventListener('click', closeSidebar);
+  // Sidebar
+  if (sidebarOpen)    sidebarOpen.addEventListener('click', openSidebar);
+  if (sidebarClose)   sidebarClose.addEventListener('click', closeSidebar);
+  if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
 
-  document.querySelectorAll('.nav-item[data-category]').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(n => {
-        n.classList.remove('active');
-        n.removeAttribute('aria-current');
-      });
-      item.classList.add('active');
-      item.setAttribute('aria-current', 'true');
-      const prompt = CATEGORY_PROMPTS[item.dataset.category];
-      if (prompt) insertAndSend(prompt);
-      if (window.innerWidth <= 900) closeSidebar();
+  // ── v3: View navigation buttons (sidebar + feature cards + dash quick actions) ──
+  document.querySelectorAll('.nav-view-btn[data-view]').forEach(btn => {
+    btn.addEventListener('click', () => showView(btn.dataset.view));
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showView(btn.dataset.view); }
     });
   });
 
-  document.querySelectorAll('.feature-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const prompt = CATEGORY_PROMPTS[card.dataset.category];
-      if (prompt) insertAndSend(prompt);
-      chatMessages.scrollIntoView({ behavior: 'smooth' });
-    });
-    card.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        card.click();
+  // FAQ category buttons → always navigate to chat first
+  document.querySelectorAll('.nav-item[data-category]').forEach(item => {
+    item.addEventListener('click', () => {
+      showView('chat');
+      const prompt = CATEGORY_PROMPTS[item.dataset.category];
+      if (prompt) {
+        setTimeout(() => insertAndSend(prompt), 50);
       }
     });
   });
 
+  // Feature cards (chat-based ones that have data-category)
+  document.querySelectorAll('.feature-card[data-category]').forEach(card => {
+    card.addEventListener('click', () => {
+      showView('chat');
+      const prompt = CATEGORY_PROMPTS[card.dataset.category];
+      if (prompt) setTimeout(() => insertAndSend(prompt), 50);
+    });
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
+  });
+
+  // Chips
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => insertAndSend(chip.dataset.prompt));
   });
 
-  clearChatBtn.addEventListener('click', clearChat);
-  clearChatTopBtn.addEventListener('click', clearChat);
-  saveConvBtn.addEventListener('click', saveConversation);
-  studyTipBtn.addEventListener('click', showRandomStudyTip);
+  // Chat tools
+  if (clearChatBtn)    clearChatBtn.addEventListener('click', clearChat);
+  if (clearChatTopBtn) clearChatTopBtn.addEventListener('click', clearChat);
+  if (saveConvBtn)     saveConvBtn.addEventListener('click', saveConversation);
+  if (studyTipBtn)     studyTipBtn.addEventListener('click', showRandomStudyTip);
 
+  // Keyboard escape
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
+    if (e.key === 'Escape' && sidebar && sidebar.classList.contains('open')) closeSidebar();
   });
 }
 

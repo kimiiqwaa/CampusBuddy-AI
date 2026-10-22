@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CampusBuddy AI — Your Smart Campus, One Chat Away.</title>
-  <meta name="description" content="CampusBuddy AI — Your intelligent student support assistant for academic help, exam prep, campus services, and study tips." />
+  <title>CampusBuddy AI 3.0 — Ultimate Student Companion</title>
+  <meta name="description" content="CampusBuddy AI 3.0 — Your intelligent student companion for academics, study planning, focus timing, and bilingual campus support." />
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -21,7 +21,7 @@
 
   <div class="app-shell">
 
-    <!-- ═══════════════════════════════════════════ SIDEBAR ═══ -->
+    <!-- ══════════════════════════════════════════════ SIDEBAR ══ -->
     <aside class="sidebar" id="sidebar" role="complementary" aria-label="Navigation sidebar">
 
       <div class="sidebar-header">
@@ -50,56 +50,83 @@
         </button>
       </div>
 
-      <p class="sidebar-tagline">Your Smart Campus, One Chat Away.</p>
+      <p class="sidebar-tagline" data-i18n="app.tagline">Your Smart Campus, One Chat Away.</p>
 
-      <nav class="sidebar-nav" aria-label="Feature categories">
-        <div class="nav-label">Features</div>
-        <button class="nav-item active" data-category="academic" aria-current="true">
-          <span class="nav-icon" aria-hidden="true">🎓</span>
-          <span>Academic Help</span>
+      <!-- Main navigation -->
+      <nav class="sidebar-nav" aria-label="Main navigation">
+        <div class="nav-label" data-i18n="sidebar.views">Views</div>
+
+        <button class="nav-item nav-view-btn active" data-view="chat" aria-current="true">
+          <span class="nav-icon" aria-hidden="true">💬</span>
+          <span data-i18n="nav.chat">Chat</span>
         </button>
-        <button class="nav-item" data-category="exam">
-          <span class="nav-icon" aria-hidden="true">📝</span>
-          <span>Exam Preparation</span>
+        <button class="nav-item nav-view-btn" data-view="dashboard">
+          <span class="nav-icon" aria-hidden="true">📊</span>
+          <span data-i18n="nav.dashboard">Dashboard</span>
         </button>
-        <button class="nav-item" data-category="campus">
-          <span class="nav-icon" aria-hidden="true">🏛️</span>
-          <span>Campus Services</span>
+        <button class="nav-item nav-view-btn" data-view="planner">
+          <span class="nav-icon" aria-hidden="true">📅</span>
+          <span data-i18n="nav.planner">Study Planner</span>
         </button>
-        <button class="nav-item" data-category="tips">
-          <span class="nav-icon" aria-hidden="true">💡</span>
-          <span>Study Tips</span>
+        <button class="nav-item nav-view-btn" data-view="timer">
+          <span class="nav-icon" aria-hidden="true">⏱️</span>
+          <span data-i18n="nav.timer">Focus Timer</span>
         </button>
       </nav>
 
       <div class="sidebar-divider"></div>
 
-      <div class="sidebar-actions">
-        <div class="nav-label">Tools</div>
+      <!-- Chat quick actions (shown in chat view) -->
+      <div class="sidebar-chat-section" id="sidebarChatSection">
+        <div class="nav-label" data-i18n="sidebar.features">Features</div>
+        <button class="nav-item" data-category="academic">
+          <span class="nav-icon" aria-hidden="true">🎓</span>
+          <span data-i18n="sidebar.academic">Academic Help</span>
+        </button>
+        <button class="nav-item" data-category="exam">
+          <span class="nav-icon" aria-hidden="true">📝</span>
+          <span data-i18n="sidebar.exam">Exam Preparation</span>
+        </button>
+        <button class="nav-item" data-category="campus">
+          <span class="nav-icon" aria-hidden="true">🏛️</span>
+          <span data-i18n="sidebar.campus">Campus Services</span>
+        </button>
+        <button class="nav-item" data-category="tips">
+          <span class="nav-icon" aria-hidden="true">💡</span>
+          <span data-i18n="sidebar.tips">Study Tips</span>
+        </button>
+
+        <div class="sidebar-divider"></div>
+        <div class="nav-label" data-i18n="sidebar.tools">Tools</div>
         <button class="nav-item" id="clearChatBtn">
           <span class="nav-icon" aria-hidden="true">🗑️</span>
-          <span>Clear Conversation</span>
+          <span data-i18n="chat.clear">Clear Conversation</span>
         </button>
         <button class="nav-item" id="saveConvBtn">
           <span class="nav-icon" aria-hidden="true">💾</span>
-          <span>Save Conversation</span>
+          <span data-i18n="chat.save">Save Conversation</span>
         </button>
         <button class="nav-item" id="studyTipBtn">
           <span class="nav-icon" aria-hidden="true">✨</span>
-          <span>Random Study Tip</span>
+          <span data-i18n="btn.studyTip">Random Study Tip</span>
         </button>
       </div>
+
+      <!-- AI Mode panel -->
+      <div class="sidebar-divider"></div>
+      <div id="ai-config-panel"></div>
 
       <div class="sidebar-footer">
         <div class="status-indicator">
           <span class="status-dot" aria-hidden="true"></span>
-          <span class="status-text">AI Assistant Online</span>
+          <span class="status-text" data-i18n="sidebar.status">AI Assistant Online</span>
         </div>
-        <p class="footer-note">IBM AI Workshop Demo · 2025</p>
+        <div class="version-badge">v3.0 Ultimate</div>
+        <p class="footer-note" data-i18n="sidebar.footer">IBM AI Workshop Demo · 2025</p>
       </div>
     </aside>
 
-    <!-- ════════════════════════════════════════ MAIN CONTENT ══ -->
+    <!-- ════════════════════════════════════════ MAIN CONTENT ════ -->
     <main class="main-content" id="mainContent">
 
       <!-- Top Bar -->
@@ -110,6 +137,7 @@
         <div class="topbar-brand">
           <span class="brand-name">CampusBuddy</span>
           <span class="brand-badge">AI</span>
+          <span class="version-pill">3.0</span>
         </div>
         <div class="topbar-right">
           <div class="lang-toggle" role="group" aria-label="Language selection">
@@ -123,103 +151,232 @@
         </div>
       </header>
 
-      <div class="content-area">
+      <!-- ══════════════════ VIEW: CHAT ═════════════════════════ -->
+      <div class="view-panel" id="view-chat" data-view="chat">
+        <div class="content-area">
 
-        <!-- Welcome Section -->
-        <section class="welcome-section" aria-labelledby="welcomeHeading">
-          <div class="welcome-text">
-            <p class="welcome-greeting" id="dynamicGreeting" aria-live="polite">Good morning! 👋</p>
-            <h1 id="welcomeHeading">How can I help you today?</h1>
-            <p class="welcome-sub">Ask me anything about academics, exams, campus services, or study strategies.</p>
-          </div>
-          <div class="welcome-chips" role="list" aria-label="Quick question suggestions">
-            <button class="chip" data-prompt="How do I prepare for my exams?" role="listitem">📝 Exam tips</button>
-            <button class="chip" data-prompt="What study techniques are most effective?" role="listitem">📚 Study techniques</button>
-            <button class="chip" data-prompt="How do I register for courses?" role="listitem">🎓 Course registration</button>
-            <button class="chip" data-prompt="Where is the library?" role="listitem">🏛️ Library location</button>
-            <button class="chip" data-prompt="How do I manage stress during exam season?" role="listitem">🧠 Manage stress</button>
-            <button class="chip" data-prompt="Berikan saya tip belajar yang berkesan" role="listitem">🇲🇾 Tip belajar</button>
-          </div>
-        </section>
+          <!-- Welcome Section -->
+          <section class="welcome-section" aria-labelledby="welcomeHeading">
+            <div class="welcome-text">
+              <p class="welcome-greeting" id="dynamicGreeting" aria-live="polite">Good morning! 👋</p>
+              <h1 id="welcomeHeading" data-i18n="topbar.subtitle">How can I help you today?</h1>
+              <p class="welcome-sub" data-i18n="topbar.subtitle.sub">Ask me anything about academics, exams, campus services, or study strategies.</p>
+            </div>
+            <div class="welcome-chips" role="list" aria-label="Quick question suggestions">
+              <button class="chip" data-prompt="How do I prepare for my exams?" role="listitem">📝 Exam tips</button>
+              <button class="chip" data-prompt="What study techniques are most effective?" role="listitem">📚 Study techniques</button>
+              <button class="chip" data-prompt="How do I manage my study time?" role="listitem">⏰ Time management</button>
+              <button class="chip" data-prompt="How do I register for courses?" role="listitem">🎓 Registration</button>
+              <button class="chip" data-prompt="How do I manage stress during exam season?" role="listitem">🧠 Manage stress</button>
+              <button class="chip" data-prompt="Bagaimana nak urus masa belajar?" role="listitem">🇲🇾 Urus masa</button>
+            </div>
+          </section>
 
-        <!-- Feature Cards -->
-        <section class="feature-cards" aria-label="Feature categories">
-          <article class="feature-card" data-category="academic" tabindex="0" role="button" aria-label="Academic Help — click to explore">
-            <div class="card-icon" aria-hidden="true">🎓</div>
-            <h3>Academic Help</h3>
-            <p>Course registration, GPA calculator, assignment guidance, and academic planning.</p>
-            <div class="card-arrow" aria-hidden="true">→</div>
-          </article>
-          <article class="feature-card" data-category="exam" tabindex="0" role="button" aria-label="Exam Preparation — click to explore">
-            <div class="card-icon" aria-hidden="true">📝</div>
-            <h3>Exam Preparation</h3>
-            <p>Study strategies, revision planning, time management, and stress management tips.</p>
-            <div class="card-arrow" aria-hidden="true">→</div>
-          </article>
-          <article class="feature-card" data-category="campus" tabindex="0" role="button" aria-label="Campus Services — click to explore">
-            <div class="card-icon" aria-hidden="true">🏛️</div>
-            <h3>Campus Services</h3>
-            <p>Library access, counselling, financial aid, clubs, and campus facilities info.</p>
-            <div class="card-arrow" aria-hidden="true">→</div>
-          </article>
-          <article class="feature-card" data-category="tips" tabindex="0" role="button" aria-label="Study Tips — click to explore">
-            <div class="card-icon" aria-hidden="true">💡</div>
-            <h3>Study Tips</h3>
-            <p>Proven productivity methods, focus techniques, and motivation strategies.</p>
-            <div class="card-arrow" aria-hidden="true">→</div>
-          </article>
-        </section>
+          <!-- Feature Cards -->
+          <section class="feature-cards" aria-label="Feature categories">
+            <article class="feature-card" data-category="academic" tabindex="0" role="button" aria-label="Academic Help">
+              <div class="card-icon" aria-hidden="true">🎓</div>
+              <h3>Academic Help</h3>
+              <p>Course registration, GPA, assignments, and academic planning.</p>
+              <div class="card-arrow" aria-hidden="true">→</div>
+            </article>
+            <article class="feature-card" data-category="exam" tabindex="0" role="button" aria-label="Exam Preparation">
+              <div class="card-icon" aria-hidden="true">📝</div>
+              <h3>Exam Prep</h3>
+              <p>Study strategies, revision, time management, and stress tips.</p>
+              <div class="card-arrow" aria-hidden="true">→</div>
+            </article>
+            <article class="feature-card nav-view-btn" data-view="planner" tabindex="0" role="button" aria-label="Study Planner">
+              <div class="card-icon" aria-hidden="true">📅</div>
+              <h3>Study Planner</h3>
+              <p>Personalised weekly timetable based on your exam dates.</p>
+              <div class="card-arrow" aria-hidden="true">→</div>
+            </article>
+            <article class="feature-card nav-view-btn" data-view="timer" tabindex="0" role="button" aria-label="Focus Timer">
+              <div class="card-icon" aria-hidden="true">⏱️</div>
+              <h3>Focus Timer</h3>
+              <p>Pomodoro technique with streaks and progress tracking.</p>
+              <div class="card-arrow" aria-hidden="true">→</div>
+            </article>
+          </section>
 
-        <!-- Chat Panel -->
-        <section class="chat-panel" aria-label="Chat conversation">
-          <div class="chat-header">
-            <div class="chat-header-left">
-              <div class="avatar ai-avatar" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><defs><linearGradient id="avGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs><path d="M8 10h16M8 16h10M8 22h13" stroke="url(#avGrad)" stroke-width="2.2" stroke-linecap="round"/><circle cx="25" cy="22" r="4" fill="url(#avGrad)"/><circle cx="25" cy="22" r="2" fill="#fff"/></svg>
+          <!-- Chat Panel -->
+          <section class="chat-panel" aria-label="Chat conversation">
+            <div class="chat-header">
+              <div class="chat-header-left">
+                <div class="avatar ai-avatar" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><defs><linearGradient id="avGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs><path d="M8 10h16M8 16h10M8 22h13" stroke="url(#avGrad)" stroke-width="2.2" stroke-linecap="round"/><circle cx="25" cy="22" r="4" fill="url(#avGrad)"/><circle cx="25" cy="22" r="2" fill="#fff"/></svg>
+                </div>
+                <div>
+                  <div class="chat-title">CampusBuddy AI</div>
+                  <div class="chat-status" id="chatStatus"><span class="status-dot sm" aria-hidden="true"></span> <span data-i18n="status.online">Online · Ready to help</span></div>
+                </div>
               </div>
-              <div>
-                <div class="chat-title">CampusBuddy AI</div>
-                <div class="chat-status"><span class="status-dot sm" aria-hidden="true"></span> Online · Ready to help</div>
+              <div class="chat-header-right">
+                <div class="chat-mode-indicator" id="chatModeIndicator">
+                  <span class="mode-pill mode-faq">FAQ</span>
+                </div>
+                <button class="btn-icon" id="clearChatTopBtn" aria-label="Clear chat history" title="Clear chat">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                </button>
               </div>
             </div>
-            <button class="btn-icon" id="clearChatTopBtn" aria-label="Clear chat history" title="Clear chat">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+
+            <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Chat messages"></div>
+
+            <div class="chat-input-area">
+              <div class="input-wrapper">
+                <textarea
+                  id="chatInput"
+                  class="chat-input"
+                  placeholder="Ask me anything about campus life…"
+                  rows="1"
+                  aria-label="Type your message"
+                  aria-multiline="true"
+                  maxlength="500"
+                ></textarea>
+                <button class="send-btn" id="sendBtn" aria-label="Send message" disabled>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </div>
+              <p class="input-hint" id="inputHint" data-i18n="chat.hint">Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line · Bilingual: EN / BM</p>
+            </div>
+          </section>
+
+        </div><!-- /.content-area -->
+      </div><!-- /#view-chat -->
+
+      <!-- ══════════════════ VIEW: DASHBOARD ════════════════════ -->
+      <div class="view-panel hidden" id="view-dashboard" data-view="dashboard">
+        <div class="content-area">
+          <div class="dash-header">
+            <h1 class="dash-title" data-i18n="dash.welcome">Welcome back! 🎓</h1>
+            <p class="dash-sub" id="dashDate"></p>
+          </div>
+
+          <div class="dash-grid">
+            <!-- Today's schedule -->
+            <div class="dash-card dash-card--wide">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">📅</span>
+                <h3 data-i18n="dash.today">Today's Schedule</h3>
+              </div>
+              <div id="dash-today-sessions" class="dash-content">
+                <div class="dash-empty" data-i18n="dash.noSchedule">No sessions today</div>
+              </div>
+            </div>
+
+            <!-- Upcoming exams -->
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">📝</span>
+                <h3 data-i18n="dash.upcoming">Upcoming Exams</h3>
+              </div>
+              <div id="dash-upcoming-exams" class="dash-content">
+                <div class="dash-empty" data-i18n="dash.noExams">No upcoming exams</div>
+              </div>
+            </div>
+
+            <!-- Focus summary -->
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">⏱️</span>
+                <h3 data-i18n="dash.focusSummary">Focus Summary</h3>
+              </div>
+              <div id="dash-focus-summary" class="dash-content">
+                <div class="dash-stat-row">
+                  <div class="dash-stat">
+                    <div class="dash-stat-val" id="dash-sessions-today">0</div>
+                    <div class="dash-stat-label" data-i18n="timer.sessions">Sessions Today</div>
+                  </div>
+                  <div class="dash-stat">
+                    <div class="dash-stat-val" id="dash-total-mins">0</div>
+                    <div class="dash-stat-label" data-i18n="timer.totalMins">Focus Minutes</div>
+                  </div>
+                  <div class="dash-stat">
+                    <div class="dash-stat-val" id="dash-streak">0</div>
+                    <div class="dash-stat-label" data-i18n="timer.streak">Day Streak</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Study progress -->
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">📊</span>
+                <h3 data-i18n="dash.progress">Study Progress</h3>
+              </div>
+              <div id="dash-study-progress" class="dash-content">
+                <div class="dash-empty">No plan generated yet</div>
+              </div>
+            </div>
+
+            <!-- Daily motivation -->
+            <div class="dash-card dash-card--accent">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">✨</span>
+                <h3 data-i18n="dash.motivation">Daily Motivation</h3>
+              </div>
+              <div id="dash-motivation" class="dash-motivation-text">Loading…</div>
+            </div>
+
+            <!-- Weekly overview -->
+            <div class="dash-card dash-card--wide">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">📈</span>
+                <h3 data-i18n="dash.weeklyOverview">Weekly Overview</h3>
+              </div>
+              <div id="dash-weekly" class="dash-content dash-weekly-chart"></div>
+            </div>
+          </div>
+
+          <!-- Quick actions -->
+          <div class="dash-quick-actions">
+            <button class="dash-action-btn nav-view-btn" data-view="chat">
+              <span>💬</span> Ask AI
+            </button>
+            <button class="dash-action-btn nav-view-btn" data-view="planner">
+              <span>📅</span> Open Planner
+            </button>
+            <button class="dash-action-btn nav-view-btn" data-view="timer">
+              <span>⏱️</span> Start Timer
             </button>
           </div>
+        </div>
+      </div><!-- /#view-dashboard -->
 
-          <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Chat messages">
-            <!-- Messages injected by JS -->
-          </div>
+      <!-- ══════════════════ VIEW: STUDY PLANNER ════════════════ -->
+      <div class="view-panel hidden" id="view-planner" data-view="planner">
+        <div class="content-area">
+          <div id="planner-view"></div>
+        </div>
+      </div><!-- /#view-planner -->
 
-          <div class="chat-input-area">
-            <div class="input-wrapper">
-              <textarea
-                id="chatInput"
-                class="chat-input"
-                placeholder="Ask me anything about campus life…"
-                rows="1"
-                aria-label="Type your message"
-                aria-multiline="true"
-                maxlength="500"
-              ></textarea>
-              <button class="send-btn" id="sendBtn" aria-label="Send message" disabled>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              </button>
-            </div>
-            <p class="input-hint">Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line · Bilingual support: EN / BM</p>
-          </div>
-        </section>
+      <!-- ══════════════════ VIEW: FOCUS TIMER ══════════════════ -->
+      <div class="view-panel hidden" id="view-timer" data-view="timer">
+        <div class="content-area">
+          <div id="timer-view"></div>
+        </div>
+      </div><!-- /#view-timer -->
 
-      </div><!-- /.content-area -->
     </main>
   </div><!-- /.app-shell -->
 
   <!-- Toast notification -->
   <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- Overlay for mobile sidebar -->
+  <!-- Sidebar overlay (mobile) -->
   <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
 
+  <!-- Planner modal anchor (injected by planner.js) -->
+  <div id="planner-modal-anchor"></div>
+
+  <!-- ── Scripts ── load order: i18n → ai → planner → timer → script (main) -->
+  <script src="i18n.js"></script>
+  <script src="ai.js"></script>
+  <script src="planner.js"></script>
+  <script src="timer.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
