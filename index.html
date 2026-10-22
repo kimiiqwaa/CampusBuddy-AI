@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusBuddy AI — Your Smart Campus, One Chat Away.</title>
+  <meta name="description" content="CampusBuddy AI — Your intelligent student support assistant for academic help, exam prep, campus services, and study tips." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <div class="app-shell">
+
+    <!-- ═══════════════════════════════════════════ SIDEBAR ═══ -->
+    <aside class="sidebar" id="sidebar" role="complementary" aria-label="Navigation sidebar">
+
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <defs>
+                <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#60a5fa"/>
+                  <stop offset="100%" stop-color="#a78bfa"/>
+                </linearGradient>
+              </defs>
+              <rect width="32" height="32" rx="10" fill="url(#logoGrad)" opacity="0.15"/>
+              <path d="M8 10h16M8 16h10M8 22h13" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round"/>
+              <circle cx="25" cy="22" r="4" fill="url(#logoGrad)" opacity="0.9"/>
+              <circle cx="25" cy="22" r="2" fill="#fff"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">CampusBuddy</span>
+            <span class="brand-badge">AI</span>
+          </div>
+        </div>
+        <button class="sidebar-close btn-icon" id="sidebarClose" aria-label="Close sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <p class="sidebar-tagline">Your Smart Campus, One Chat Away.</p>
+
+      <nav class="sidebar-nav" aria-label="Feature categories">
+        <div class="nav-label">Features</div>
+        <button class="nav-item active" data-category="academic" aria-current="true">
+          <span class="nav-icon" aria-hidden="true">🎓</span>
+          <span>Academic Help</span>
+        </button>
+        <button class="nav-item" data-category="exam">
+          <span class="nav-icon" aria-hidden="true">📝</span>
+          <span>Exam Preparation</span>
+        </button>
+        <button class="nav-item" data-category="campus">
+          <span class="nav-icon" aria-hidden="true">🏛️</span>
+          <span>Campus Services</span>
+        </button>
+        <button class="nav-item" data-category="tips">
+          <span class="nav-icon" aria-hidden="true">💡</span>
+          <span>Study Tips</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-actions">
+        <div class="nav-label">Tools</div>
+        <button class="nav-item" id="clearChatBtn">
+          <span class="nav-icon" aria-hidden="true">🗑️</span>
+          <span>Clear Conversation</span>
+        </button>
+        <button class="nav-item" id="saveConvBtn">
+          <span class="nav-icon" aria-hidden="true">💾</span>
+          <span>Save Conversation</span>
+        </button>
+        <button class="nav-item" id="studyTipBtn">
+          <span class="nav-icon" aria-hidden="true">✨</span>
+          <span>Random Study Tip</span>
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="status-indicator">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span class="status-text">AI Assistant Online</span>
+        </div>
+        <p class="footer-note">IBM AI Workshop Demo · 2025</p>
+      </div>
+    </aside>
+
+    <!-- ════════════════════════════════════════ MAIN CONTENT ══ -->
+    <main class="main-content" id="mainContent">
+
+      <!-- Top Bar -->
+      <header class="topbar" role="banner">
+        <button class="btn-icon" id="sidebarOpen" aria-label="Open sidebar" aria-expanded="false" aria-controls="sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+        <div class="topbar-brand">
+          <span class="brand-name">CampusBuddy</span>
+          <span class="brand-badge">AI</span>
+        </div>
+        <div class="topbar-right">
+          <div class="lang-toggle" role="group" aria-label="Language selection">
+            <button class="lang-btn active" data-lang="en" aria-pressed="true">EN</button>
+            <button class="lang-btn" data-lang="ms" aria-pressed="false">BM</button>
+          </div>
+          <button class="btn-icon theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+            <svg class="icon-dark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg class="icon-light" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="content-area">
+
+        <!-- Welcome Section -->
+        <section class="welcome-section" aria-labelledby="welcomeHeading">
+          <div class="welcome-text">
+            <p class="welcome-greeting" id="dynamicGreeting" aria-live="polite">Good morning! 👋</p>
+            <h1 id="welcomeHeading">How can I help you today?</h1>
+            <p class="welcome-sub">Ask me anything about academics, exams, campus services, or study strategies.</p>
+          </div>
+          <div class="welcome-chips" role="list" aria-label="Quick question suggestions">
+            <button class="chip" data-prompt="How do I prepare for my exams?" role="listitem">📝 Exam tips</button>
+            <button class="chip" data-prompt="What study techniques are most effective?" role="listitem">📚 Study techniques</button>
+            <button class="chip" data-prompt="How do I register for courses?" role="listitem">🎓 Course registration</button>
+            <button class="chip" data-prompt="Where is the library?" role="listitem">🏛️ Library location</button>
+            <button class="chip" data-prompt="How do I manage stress during exam season?" role="listitem">🧠 Manage stress</button>
+            <button class="chip" data-prompt="Berikan saya tip belajar yang berkesan" role="listitem">🇲🇾 Tip belajar</button>
+          </div>
+        </section>
+
+        <!-- Feature Cards -->
+        <section class="feature-cards" aria-label="Feature categories">
+          <article class="feature-card" data-category="academic" tabindex="0" role="button" aria-label="Academic Help — click to explore">
+            <div class="card-icon" aria-hidden="true">🎓</div>
+            <h3>Academic Help</h3>
+            <p>Course registration, GPA calculator, assignment guidance, and academic planning.</p>
+            <div class="card-arrow" aria-hidden="true">→</div>
+          </article>
+          <article class="feature-card" data-category="exam" tabindex="0" role="button" aria-label="Exam Preparation — click to explore">
+            <div class="card-icon" aria-hidden="true">📝</div>
+            <h3>Exam Preparation</h3>
+            <p>Study strategies, revision planning, time management, and stress management tips.</p>
+            <div class="card-arrow" aria-hidden="true">→</div>
+          </article>
+          <article class="feature-card" data-category="campus" tabindex="0" role="button" aria-label="Campus Services — click to explore">
+            <div class="card-icon" aria-hidden="true">🏛️</div>
+            <h3>Campus Services</h3>
+            <p>Library access, counselling, financial aid, clubs, and campus facilities info.</p>
+            <div class="card-arrow" aria-hidden="true">→</div>
+          </article>
+          <article class="feature-card" data-category="tips" tabindex="0" role="button" aria-label="Study Tips — click to explore">
+            <div class="card-icon" aria-hidden="true">💡</div>
+            <h3>Study Tips</h3>
+            <p>Proven productivity methods, focus techniques, and motivation strategies.</p>
+            <div class="card-arrow" aria-hidden="true">→</div>
+          </article>
+        </section>
+
+        <!-- Chat Panel -->
+        <section class="chat-panel" aria-label="Chat conversation">
+          <div class="chat-header">
+            <div class="chat-header-left">
+              <div class="avatar ai-avatar" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><defs><linearGradient id="avGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs><path d="M8 10h16M8 16h10M8 22h13" stroke="url(#avGrad)" stroke-width="2.2" stroke-linecap="round"/><circle cx="25" cy="22" r="4" fill="url(#avGrad)"/><circle cx="25" cy="22" r="2" fill="#fff"/></svg>
+              </div>
+              <div>
+                <div class="chat-title">CampusBuddy AI</div>
+                <div class="chat-status"><span class="status-dot sm" aria-hidden="true"></span> Online · Ready to help</div>
+              </div>
+            </div>
+            <button class="btn-icon" id="clearChatTopBtn" aria-label="Clear chat history" title="Clear chat">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
+          </div>
+
+          <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Chat messages">
+            <!-- Messages injected by JS -->
+          </div>
+
+          <div class="chat-input-area">
+            <div class="input-wrapper">
+              <textarea
+                id="chatInput"
+                class="chat-input"
+                placeholder="Ask me anything about campus life…"
+                rows="1"
+                aria-label="Type your message"
+                aria-multiline="true"
+                maxlength="500"
+              ></textarea>
+              <button class="send-btn" id="sendBtn" aria-label="Send message" disabled>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+            <p class="input-hint">Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line · Bilingual support: EN / BM</p>
+          </div>
+        </section>
+
+      </div><!-- /.content-area -->
+    </main>
+  </div><!-- /.app-shell -->
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Overlay for mobile sidebar -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
